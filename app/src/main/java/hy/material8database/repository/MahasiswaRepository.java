@@ -2,6 +2,7 @@ package hy.material8database.repository;
 
 import hy.material8database.database.Database;
 import hy.material8database.models.Mahasiswa;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,6 +25,7 @@ public class MahasiswaRepository {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, mhs.nim);
             preparedStatement.setString(2, mhs.nama);
+            preparedStatement.setString(3, mhs.kodeJurusan);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -33,7 +35,7 @@ public class MahasiswaRepository {
     // READ ALL
     public static List<Mahasiswa> getAllMahasiswa() {
         List<Mahasiswa> result = new ArrayList<>();
-        String sql = "SELECT nim, nama FROM mahasiswa";
+        String sql = "SELECT nim, nama, kode_jurusan FROM mahasiswa";
         try {
             PreparedStatement stmt = conn.prepareStatement(sql);
             ResultSet resultSet = stmt.executeQuery();
@@ -42,7 +44,8 @@ public class MahasiswaRepository {
                 result.add(
                     new Mahasiswa(
                         resultSet.getString("nim"),
-                        resultSet.getString("nama")
+                        resultSet.getString("nama"),
+                        resultSet.getString("kode_jurusan")
                     )
                 );
             }
@@ -54,7 +57,7 @@ public class MahasiswaRepository {
 
     // READ BY NIM
     public static Mahasiswa getMahasiswaByNim(String nim) {
-        String sql = "SELECT nim, nama FROM mahasiswa WHERE nim = ?";
+        String sql = "SELECT nim, nama, kode_jurusan FROM mahasiswa WHERE nim = ?";
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(sql);
             preparedStatement.setString(1, nim);
@@ -62,7 +65,8 @@ public class MahasiswaRepository {
             if (resultSet.next()) {
                 return new Mahasiswa(
                     resultSet.getString("nim"),
-                    resultSet.getString("nama")
+                    resultSet.getString("nama"),
+                    resultSet.getString("kode_jurusan")
                 );
             }
         } catch (SQLException e) {
